@@ -133,3 +133,11 @@ dmypy.json
 
 # MacOS folder display options
 .DS_Store
+
+# Latex build files
+*.aux
+*.log
+*.out
+*.gz
+
+
