@@ -140,4 +140,6 @@ dmypy.json
 *.out
 *.gz
 
+# Folder for experimental stuff
+experiments/
 
