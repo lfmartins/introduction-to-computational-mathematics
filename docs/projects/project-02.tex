@@ -1,0 +1,98 @@
+\documentclass[12pt]{article}
+\input{../icmp-macros.tex}
+\setheadings{MTH 493/593 --- Introduction to Computational Mathematics --- Project 2}
+
+\begin{document}
+\sffamily
+
+\section{Submission Instructions}
+The project must be submitted through BBLearn as a Jupyter notebook. Create a new notebook in Google Colab. Please name your notebook as follows:
+
+\begin{center}
+Project 1 - Your Name - Your CSU ID
+\end{center}
+
+For example, Alice Mathperson with ID 1234567 would name her notebook:
+
+\begin{center}
+Project 1 - Alice Mathperson - 1234567
+\end{center}
+
+You are allowed to make multiple submissions in BBLearn. However, only the final submission will be graded. In your final submission, make sure of the following:
+
+\begin{itemize}
+\item The notebook must run without errors. Before submitting the notebook, check that all cells execute correctly, \emph{in the order they appear in the notebook}.
+\item There is one exception to the rule above. It is often useful to test code we know to produce errors, so that we know how our code reacts to mistakes made by the user. In this case, provide an explanation of the code being tested.
+\item Add text cells to explain what you are doing in each step, and state your conclusions. Your project should be readable as a mathematical paper.
+\item Your code should not only be correct, but well structured and clear. Use meaningful variable names and add comments where you feel necessary.
+\end{itemize}
+
+\section{Project Statement}
+In this project we will explore a modern algorithm to approximate $\pi$ based on the \emph{arithmetic-geometric mean} iteration. This algorithm has been used to compute $\pi$ to a precision of millions of decimal places.
+
+The algorithm is defined in terms of three sequences defined recursively as follows:
+\begin{enumerate}
+\item Choose two real numbers $a_0$ and $b_0$ such that $a_0>b_0>0$, and let $c_0=\sqrt{a_0^2-b_0^2}$.
+\item For $n \ge 1$, let:
+\[
+a_n=\frac{1}{2}(a_{n-1}+b_{n-1},\quad b_n=(a_{n-1}b_{n-1})^{\frac{1}{2}},\quad c_n=\frac{1}{2}(a_{n-1}-b_{n-1})
+\]
+\end{enumerate}
+Then, the sequences $(a_n)$ and $(b_n)$ converge to a common value, called the \emph{arithmetic-geometric mean} of $a_0$ and $b_0$:
+\[
+\text{agm}(a_0,b_0)=\lim_{n\to\infty}a_n=\lim_{n\to\infty}b_n.
+\]
+Then, we have the following remarkable formula for $\pi$:
+\[
+\pi=\frac{4\left(\text{agm}\left(1,2^{-1/2}\right)\right)^2}
+{1-\sum_{j=1}^{\infty}2^{j+1}c_j^2}
+\]
+
+\subsection{Part 1} 
+
+Write code that uses the formula above to compute an approximation for $\pi$. To obtain the approximation, we \emph{truncate} the formula for $\pi$. More precisely, we have the following estimates:
+\[
+\frac{4(a_n)^2}{1-\sum_{j=1}^{n}2^{j+1}c_j^2}>\pi>
+\frac{4(b_n)^2}{1-\sum_{j=1}^{n}2^{j+1}c_j^2}
+\]
+One possible way to organize the computation is the following:
+\begin{lstlisting}
+# Initialization
+a, b = ... # Initialize a, b
+c = ...    # Initialize c
+pwr2 = ... # Initialize powers of 2
+acc = ...  # Initialize accumulator for the sum
+maxn = ... # Maximum number of iterations
+tol = ...  # Required tolerance for approximation
+for n in range(maxn):
+	# update a, b, c, pwr, acc
+	# Compute lower and upper bounds for pi
+	if upper_bound - lower_bound < tol:
+		break
+# Print results, error messages, etc.
+\end{lstlisting}
+\emph{Note}: This is just a suggestion of how to set up the code. Feel free to modify it if you find a better solution!
+
+In this version of the code, use either the built-in Python mathematical functions or \texttt{numpy} (here it does not really make a difference, since we are not using any vectorization).
+
+To check correctness of the code, compare the result with the approximation for $\pi$ given by Python (either \texttt{math.pi} or \texttt{numpy.pi}).
+
+\subsection{Part 2} Let's now compute a higher precision of $\pi$. To achieve this, we can use the \texttt{decimal} module, which is part of the Python standard library. The \texttt{decimal} module provides support to arbitrary precision computations with \emph{decimal} numbers (as opposed to the \emph{binary} representation that is the default).
+
+Do the following: 
+
+\begin{itemize}
+\item Read the documentation of the \texttt{decimal} module, available at the link:
+\begin{center}
+\url{https://docs.python.org/3/library/decimal.html}
+\end{center}
+\item Modify your code to approximate $\pi$ so that it uses the \texttt{decimal} module.
+\item Use your code to compute an approximation to $\pi$ that is correct to 1000 significant digits.
+\item Find a high-precision approximation for $\pi$ and use it to check your result.
+\item What is the highest precision you can get with your code, in a reasonable time?
+\end{itemize}
+
+
+
+\end{document}
+
