@@ -9,13 +9,13 @@
 The project must be submitted through BBLearn as a Jupyter notebook. Create a new notebook in Google Colab. Please name your notebook as follows:
 
 \begin{center}
-Project 1 - Your Name - Your CSU ID
+Project 2 - Your Name - Your CSU ID
 \end{center}
 
 For example, Alice Mathperson with ID 1234567 would name her notebook:
 
 \begin{center}
-Project 1 - Alice Mathperson - 1234567
+Project 2 - Alice Mathperson - 1234567
 \end{center}
 
 You are allowed to make multiple submissions in BBLearn. However, only the final submission will be graded. In your final submission, make sure of the following:
@@ -28,14 +28,14 @@ You are allowed to make multiple submissions in BBLearn. However, only the final
 \end{itemize}
 
 \section{Project Statement}
-In this project we will explore a modern algorithm to approximate $\pi$ based on the \emph{arithmetic-geometric mean} iteration. This algorithm has been used to compute $\pi$ to a precision of millions of decimal places.
+In this project you will implement a modern algorithm to approximate $\pi$ based on the \emph{arithmetic-geometric mean} function. This algorithm has been used to compute $\pi$ to a precision of millions of decimal places.
 
 The algorithm is defined in terms of three sequences defined recursively as follows:
 \begin{enumerate}
 \item Choose two real numbers $a_0$ and $b_0$ such that $a_0>b_0>0$, and let $c_0=\sqrt{a_0^2-b_0^2}$.
 \item For $n \ge 1$, let:
 \[
-a_n=\frac{1}{2}(a_{n-1}+b_{n-1},\quad b_n=(a_{n-1}b_{n-1})^{\frac{1}{2}},\quad c_n=\frac{1}{2}(a_{n-1}-b_{n-1})
+a_n=\frac{1}{2}(a_{n-1}+b_{n-1}),\quad b_n=(a_{n-1}b_{n-1})^{\frac{1}{2}},\quad c_n=\frac{1}{2}(a_{n-1}-b_{n-1})
 \]
 \end{enumerate}
 Then, the sequences $(a_n)$ and $(b_n)$ converge to a common value, called the \emph{arithmetic-geometric mean} of $a_0$ and $b_0$:
@@ -64,8 +64,9 @@ pwr2 = ... # Initialize powers of 2
 acc = ...  # Initialize accumulator for the sum
 maxn = ... # Maximum number of iterations
 tol = ...  # Required tolerance for approximation
+# Iteration
 for n in range(maxn):
-	# update a, b, c, pwr, acc
+	# Update a, b, c, pwr2, acc
 	# Compute lower and upper bounds for pi
 	if upper_bound - lower_bound < tol:
 		break
@@ -77,7 +78,7 @@ In this version of the code, use either the built-in Python mathematical functio
 
 To check correctness of the code, compare the result with the approximation for $\pi$ given by Python (either \texttt{math.pi} or \texttt{numpy.pi}).
 
-\subsection{Part 2} Let's now compute a higher precision of $\pi$. To achieve this, we can use the \texttt{decimal} module, which is part of the Python standard library. The \texttt{decimal} module provides support to arbitrary precision computations with \emph{decimal} numbers (as opposed to the \emph{binary} representation that is the default).
+\subsection{Part 2} Let's now compute a higher precision approximation of $\pi$. To achieve this, we can use the \texttt{decimal} module, which is part of the Python standard library. The \texttt{decimal} module provides support to arbitrary precision computations with \emph{decimal} numbers (as opposed to the \emph{binary} representation that is the used for the built-in \texttt{float} type).
 
 Do the following: 
 
