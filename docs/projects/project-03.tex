@@ -1,0 +1,157 @@
+\documentclass[12pt]{article}
+\usepackage{enumerate}
+\input{../icmp-macros.tex}
+\setheadings{MTH 493/593 --- Introduction to Computational Mathematics --- Project 3}
+
+\begin{document}
+\sffamily
+
+\section{Submission Instructions}
+\textbf{Due November 4, 2022.} The project must be submitted through BBLearn as a Jupyter notebook. Create a new notebook in Google Colab. Please name your notebook as follows:
+
+\begin{center}
+Project 3 - Your Name - Your CSU ID
+\end{center}
+
+For example, Alice Mathperson with ID 1234567 would name her notebook:
+
+\begin{center}
+Project 3 - Alice Mathperson - 1234567
+\end{center}
+
+You are allowed to make multiple submissions in BBLearn. However, only the final submission will be graded. In your final submission, make sure of the following:
+
+\begin{itemize}
+\item The notebook must run without errors. Before submitting the notebook, check that all cells execute correctly, \emph{in the order they appear in the notebook}.
+\item There is one exception to the rule above. It is often useful to test code we know to produce errors, so that we know how our code reacts to mistakes made by the user. In this case, provide an explanation of the code being tested.
+\item Add text cells to explain what you are doing in each step, and state your conclusions. Your project should be readable as a mathematical paper.
+\item Your code should not only be correct, but well structured and clear. Use meaningful variable names and add comments where you feel necessary.
+\end{itemize}
+
+\section{Project Statement}
+In this project you will learn to use python's ODE solvers using the scipy library. We have three subprojects. \textbf{Students of 493 can choose two of the subprojects, though one of them must be the first.} If the third subproject is completed, it will be treated as a bonus. \textbf{Students of 593 must do all three.}
+
+We will go over how to use ODE solvers on the week of 10/23-10/30. 
+
+\subsection{Project 1: SIR Models}
+
+SIR Models are compartmental models that describe spread of infectious diseases within a population, assuming that:
+
+\begin{enumerate}[a)]
+	\item the population is large enough to make individual fluctuations irrelevant
+	\item the time of observation is short enough to justify neglecting the effect of births and deaths
+	\item There is no latent period of infection (it doesn't go undetected)
+	\item Recovery from the infection give immunity
+\end{enumerate}
+
+These assumptions can be played around with in more detailed models. Generally, there are three compartments with SIR models
+
+$S(t)$: Susceptible individuals, people who have no infection nor immunity
+$I(t)$: Infected individuals
+$R(t)$: Recovered individuals, immune to the disease
+
+We assume that the rate of infection is jointly proportional with respect to the number of infected people and susceptible people. We also assume that the recovery rate is constant per capita of number of infected
+
+$$\frac{dS}{dt}=-\alpha S I$$
+
+The number of infected people increases if a susceptible gets infected. But infected people also recover at a certain rate, leading to a loss of the number of infected.
+
+$$\frac{dI}{dt}=\alpha S I -\beta I$$
+
+The number of recovered people depends on the rate of recovery for infected people.
+
+$$\frac{dR}{dt}=\beta I$$
+
+Note that if we assume a fixed population, then
+$$\frac{dS}{dt}+\frac{dI}{dt}+\frac{dR}{dt}=0$$
+
+
+\begin{enumerate}
+	\item Set up a system in module below with five out of one hundred people infected. Let $S(0)=95$ and $I(0)=5$ with $R(0)=0$. \textbf{Choose an infection rate of $\alpha=.1$ and a recovery rate of $\beta=.5$ and solve over an interval $[0,10]$.} Run the system and plot the three populations
+	
+	\item  Under what conditions does the number of infected decrease? Are there any initial conditions that will cause the infection to dissipate? \textbf{Ask yourself when does $dI/dt<0$ occur?} Show three cases using code.
+	
+	\item  What if the recovered lose their immunity over time? How could incorporate this detail into our model? Show an example with code and you must justify your answer using at least a few sentences. Incorporate these changes into code. Let's set the rate at which recovered change to susceptible at $\gamma R$, and vary $\gamma$.  
+
+\item Let's assume that the infection rate is seasonally dependent. How could we model this? Incorporate this into our model above. You must justify your answer using at least a few sentences.
+
+\item  Herd immunity occurs when enough of the population has developed an immunity to the disease that the number of infected does not grow. This immunity is achieved by either a) recovering from the disease or b) being vaccinated. How would you model vaccinated as a separate compartment? Would you use a constant vaccination rate or one dependent on the number of susceptible? Use Q1's setup as the baseline and show examples with code. 
+\end{enumerate}
+
+\subsection{Project 2: Chemical Kinetics Models}
+
+
+Chemical kinetics can be modeled as a system of ODEs. The idea here is that a substrate, $[S]$, can bind and unbind to an enzyme, $[E]$, forming and enzyme-substrate complex, $[ES]$,
+
+$$E+S\underset{k_{on}}{\stackrel{k_{off}}{\rightleftharpoons}}ES$$
+
+This process can be represented using the following ODE sytem, with the arrows indicating which direction a chemical reaction, and $k_{on}$ is the binding rate of the substrate and $k_{off}$ is the unbinding rate.
+
+$$\frac{d[E]}{dt}=-k_{on}[E][S]+k_{off}[ES]$$
+$$\frac{d[S]}{dt}=-k_{on}[E][S]+k_{off}[ES]$$
+$$\frac{d[ES]}{dt}=k_{on}[E][S]-k_{off}[ES]$$
+
+Now, if the enzyme-substrate reacts irreversibly to produce of a product, $[P]$, and a free enzyme $[E]$.
+
+$$E+S\underset{k_{on}}{\stackrel{k_{off}}{\rightleftharpoons}}ES\rightarrow^{k_{cat}}E+P$$
+
+Which can again be represented as an ODE system
+
+
+$$\frac{d[E]}{dt}=-k_{on}[E][S]+k_{off}[ES]+k_{cat}[ES]$$
+$$\frac{d[S]}{dt}=-k_{on}[E][S]+k_{off}[ES]$$
+$$\frac{d[ES]}{dt}=k_{on}[E][S]-k_{off}[ES]-k_{cat}[ES]$$
+$$\frac{d[P]}{dt}=k_{cat}[ES]$$
+
+where $k_{cat}$ is the rate of enzyme-substrate complex dissociating to produce a product $[P]$.
+
+\begin{enumerate}
+\item Set $k_{cat}=0$. Let's explore how binding and unbinding rate affect equilibrium. Set up the ODE system and solve using ``solve\_ivp'' with $[E](0)=1.0,[S](0)=1.0,[ES](0)=0.0,$ and $[P](0)=0.0$. Try for (a) $k_{on}=0.1$ and $k_{off}=0.1$, (a) $k_{on}=0.1$ and $k_{off}=0.05$, and (a) $k_{on}=0.1$ and $k_{off}=0.01$. How do you interpret these results?
+
+\item Set $\frac{d[ES]}{dt}=0$ and determine the equilibrium condition for $[E],[S],$ and $[ES]$. Check with the results of Question 1.
+
+
+\item Set $k_{on}=0.1$ and $k_{off}=0.05$ but now set $k_{cat}=1,0.1,0.01$ (keep the same initial conditions). How does the solution change?
+
+
+\item Stiff problems emerge when rapid changes occurs. Compute the Jacobian of the system. What are its eigenvalues for the different case of Question 3?  You can use numpy to determine the eigenvalues.
+
+\item Test the different solvers, stiff and non-stiff. Examine the runtime as a function of error tolerance.
+\end{enumerate} 
+
+
+\subsection{Project 3: Electrophysiology}
+
+One way to model a neuronal membrane potential is using the Fitz-Hugh Nagumo Model
+
+$$\frac{dV}{dt}=-V(V-1)(V-\alpha)-W+I $$
+$$\frac{dW}{dt}=\beta(V-\gamma W) $$
+
+Here $V$ is membrane potential, $W$ is a gating variable that describes ionic channels phenomenologically, and $I$ is an applied current. Here $\alpha=0.1$, $\gamma=1$, and $\beta=.01$ are constants.
+
+Let $V(0)=W(0)=0$. We can excite the system by applying a current at a certain time point. 
+
+\begin{enumerate}
+	\item Set up the code for the Fitz Hugh Nagumo Equations. Given an interval [0,500], let $I(t)$ be a constant current applied at $t=50$ and held until $t=60$. Try this by using an if-else statement.
+
+\begin{verbatim}
+I=0
+if (t>=50 and t=<60):
+    I=0.1 
+\end{verbatim}
+
+To get this to work, one of the options of solve\_ivp should be 'max\_step=1e-1'.
+
+\item Plot $V(t)$ with respect to $t$ and plot $W$ with respect to $V$, i.e. the phase plot.
+
+
+
+\item Vary $\alpha$, which represent the gating threshold. How does increasing it affect the action potential?
+
+\item Vary $\beta$ and $\gamma$. How does this affect the solution?
+
+\item What is the nullcline ($dV/dt=0$ and $dW/dt=0$) of each variable?
+\end{enumerate}
+
+\end{document}
+
